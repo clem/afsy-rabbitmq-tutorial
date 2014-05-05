@@ -1,0 +1,4 @@
+afsy_tutorial:
+    resource: "@AfsyTutorialBundle/Resources/config/routing.yml"
+    prefix:   /
+
