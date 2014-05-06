@@ -10,4 +10,22 @@ class DefaultController extends Controller
     {
         return $this->render('AfsyTutorialBundle:Default:index.html.twig', array('name' => $name));
     }
+
+    /**
+     *  Download action
+     */
+    public function downloadAction()
+    {
+        // Initialize
+        $pageHoover = $this->container->get('afsy.pagehoover');
+
+        // Download page
+        $page = 'http://afsy.fr/';
+        $pageHoover->downloadPage($page);
+
+        // Return status
+        $response = new Response();
+
+        return $response->setContent('Page "'.$page.'" is downloaded !')->send();
+    }
 }
