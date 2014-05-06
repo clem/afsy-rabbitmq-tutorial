@@ -81,4 +81,9 @@ old_sound_rabbit_mq:
         afsy_download_image:
             connection:             default
             exchange_options:       { name: 'afsy_download_image', type: direct }
-    
+    consumers:
+        afsy_download_image:
+            connection:             default
+            exchange_options:       { name: 'afsy_download_image', type: direct }
+            queue_options:          { name: 'afsy_download_image' }
+            callback:               afsy_download_image_service
