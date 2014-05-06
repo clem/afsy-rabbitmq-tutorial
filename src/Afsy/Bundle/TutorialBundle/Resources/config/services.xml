@@ -13,6 +13,7 @@
             <argument type="service" id="curl" />
             <argument type="collection">
                 <argument key="downloadFolder">./downloaded_pages/</argument>
+                <argument type="service" id="old_sound_rabbit_mq.afsy_download_image_producer" />
             </argument>
         </service>
 
