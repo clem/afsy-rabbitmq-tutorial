@@ -9,6 +9,13 @@
         <service id="curl" class="Afsy\Component\Curl\Curl">
         </service>
 
+        <service id="afsy.pagehoover" class="Afsy\Component\PageHoover">
+            <argument type="service" id="curl" />
+            <argument type="collection">
+                <argument key="downloadFolder">./downloaded_pages/</argument>
+            </argument>
+        </service>
+
     </services>
 
 </container>
