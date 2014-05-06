@@ -1,7 +1,0 @@
-parameters:
-#    afsy_tutorial.example.class: Afsy\Bundle\TutorialBundle\Example
-
-services:
-#    afsy_tutorial.example:
-#        class: %afsy_tutorial.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
