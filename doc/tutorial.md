@@ -2,7 +2,7 @@
 
 PHP is often said to be too limited, and moreover talking about heavy scripts and asychronism. When you need, for example, to execute some action on 10.000 elements, it became a bit complicated and takes a lot of server ressources… unless you use a queues manager.
 
-That's why I'll present you a messaging system that implements the [AMQP](http://en.wikipedia.org/wiki/Advanced_Message_Queuing_Protocol) : [RabbitMQ](http://www.rabbitmq.com/), and its Symfony2 bundle [RabbitMQBundle](https://github.com/videlalvaro/rabbitmqbundle), developed by [Alvaro Videla](https://github.com/videlalvaro).
+That's why I will present you a messaging system that implements the [AMQP](http://en.wikipedia.org/wiki/Advanced_Message_Queuing_Protocol) : [RabbitMQ](http://www.rabbitmq.com/), and its Symfony2 bundle [RabbitMQBundle](https://github.com/videlalvaro/rabbitmqbundle), developed by [Alvaro Videla](https://github.com/videlalvaro).
 
 ## A messaging system?
 
@@ -28,7 +28,7 @@ Here is a more complexe system where, with a messaging service, a producer B can
 
 ### RabbitMQ Install 
 
-So, here we go. Firstly, we need to install [RabbitMQ](http://www.rabbitmq.com/), and, I assure you before you'll ask, it is available for [Linux](http://www.rabbitmq.com/install-debian.html), [Mac](http://www.rabbitmq.com/install-standalone-mac.html) and [Windows](http://www.rabbitmq.com/install-windows.html). 
+So, here we go. Firstly, we need to install [RabbitMQ](http://www.rabbitmq.com/), and, I assure you before you will ask, it is available for [Linux](http://www.rabbitmq.com/install-debian.html), [Mac](http://www.rabbitmq.com/install-standalone-mac.html) and [Windows](http://www.rabbitmq.com/install-windows.html). 
 
 One installed, you only need to launch the server with this command:
 
@@ -209,7 +209,7 @@ Then, we instanciate it as a service in the services.xml (`src/Afsy/Bundle/Tutor
 </service>
 ```
 
-We'll take care, in the same time, to create the `/web/downloaded_pages/` folder to store the downloaded pages, and give it the right permissions (as a cache folder):
+We will take care, in the same time, to create the `/web/downloaded_pages/` folder to store the downloaded pages, and give it the right permissions (as a cache folder):
  
 ```
 $ cd web/
@@ -270,7 +270,7 @@ Then, we could use it as another service. Let's update the **PageHoover** servic
     <argument type="service" id="old_sound_rabbit_mq.afsy_download_image_producer" />
 ```
 
-You'll notice that the service name is really simple : **old_sound_rabbit_mq.[producer_name]_producer**.
+You will notice that the service name is really simple : **old_sound_rabbit_mq.[producer_name]_producer**.
 
 Finally, we update the `PageHoover.php` class: 
 
@@ -318,7 +318,7 @@ foreach ($images as $image)
     $this->downloadImageProducer->publish($sImg);
 }
 ```
-Even if you'll already understand reading this code, here are a few explanations:
+Even if you have already understand reading this code, here are a few explanations:
 
 - After getting images list with the crawler, we make a loop on the urls to download
 - We check image extension, and set one by default if not set
@@ -333,8 +333,8 @@ To easily pass an object (here our image to be downloaded) to the consumer, whic
 
 ### The first consumer
 
-Now, we need a receiver for this serialized object, and we'll create it with the AfsyDownloadImageConsumer class (`src/Afsy/Component/AMQP/AfsyDownloadImageConsumer.php`):
-Instead of doing it in multiple steps, we'll create it as a single file with the given methods:
+Now, we need a receiver for this serialized object, and we will create it with the AfsyDownloadImageConsumer class (`src/Afsy/Component/AMQP/AfsyDownloadImageConsumer.php`):
+Instead of doing it in multiple steps, we will create it as a single file with the given methods:
 
 - *__construct()* to initialize curl and the different options
 - *execute()* the main method to implement
@@ -501,7 +501,7 @@ And voilà, we have our first consumer and we almost can use it…
 ### One last thing : the queue
 
 We already saw it, RabbitMQ has a [web interface](http://localhost:15672/) and we can manage queues there.
-That's what we'll do now, creating the queue related to our consumer. Otherwise, without queue, it won't work.
+That's what we will do now, creating the queue related to our consumer. Otherwise, without queue, it won't work.
 
 Let's go to this web interface and click on the [Queues](http://localhost:15672/#/queues) tab.
 Then, add a new queue :
@@ -573,4 +573,4 @@ Anyway, here are some improvements ideas:
 - download of the page's images in a specific folder
 - etc.
 
-I hope you've enjoyed this article and I thank you for reading it until the end. I'll put the project sources on github, so you can get them easily. And if you have any comment and/or question, don't hesitate!
+I hope you've enjoyed this article and I thank you for reading it until the end. I will put the project sources on github, so you can get them easily. And if you have any comment and/or question, don't hesitate!
