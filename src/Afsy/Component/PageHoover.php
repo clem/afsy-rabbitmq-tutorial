@@ -8,17 +8,32 @@ use OldSound\RabbitMqBundle\RabbitMq\Producer;
 
 class PageHoover
 {
-
+    /**
+     *  @var Afsy\Component\Curl\Curl
+     */
     protected $curl = null;
+
+    /**
+     *  @var array
+     */
     protected $options = array();
+
+    /**
+     *  @var string
+     */
     protected $downloadFolder = null;
+
+    /**
+     *  @var OldSound\RabbitMqBundle\RabbitMq\Producer
+     */
     protected $downloadImageProducer = null;
 
     /**
      *  Main constructor
-     *  
-     *  @param (Curl) $curl         Curl class
-     *  @param (array) $options     Options list
+     *
+     *  @param (Curl) $curl                         Curl class
+     *  @param (Producer) $downloadImageProducer    Download image producer
+     *  @param (array) $options                     Options list
      *
      *  @return (void)
      */
@@ -48,14 +63,15 @@ class PageHoover
         $saveFile = $downloadFolder.date('Ymd-His').'-'.$pageParts['filename'].'.htm';
 
         // Download page
-        $pageContent = $this->curl->get($page); 
-     
+        $pageContent = $this->curl->get($page);
+
         // Check downloaded content
-        if(!$pageContent) { return false; }
+        if(!$pageContent) {
+            return false;
+        }
 
         // Save page in downloadFolder
-        if(!file_put_contents($saveFile, "\xEF\xBB\xBF".$pageContent->body))
-        {
+        if(!file_put_contents($saveFile, "\xEF\xBB\xBF".$pageContent->body)) {
             // Throw error
             throw new \Exception("Error saving file", 1);
         }
@@ -64,11 +80,12 @@ class PageHoover
         $crawler = new Crawler($pageContent->body);
 
         // Get images list
-        $images = $crawler->filter('img')->each(function($image, $i) { return $image->attr('src'); });
+        $images = $crawler->filter('img')->each(function($image, $i) {
+            return $image->attr('src');
+        });
 
         // Download images
-        foreach ($images as $image) 
-        {
+        foreach ($images as $image) {
             // Initialize
             $image = str_replace(' ', '', $image);
             $imgExt = pathinfo($image, PATHINFO_EXTENSION);
@@ -81,8 +98,7 @@ class PageHoover
             if(!in_array($imgExt, array('png', 'jpg', 'jpeg', 'gif'))){ $imgExt = 'png'; }
 
             // Create image to publish
-            $imgToPublish = array
-            (
+            $imgToPublish = array(
                 'url' => $image,
                 'savePath' => $this->downloadFolder.pathinfo($image, PATHINFO_FILENAME).'.'.$imgExt,
                 'savedHtmlFile' => $saveFile,
@@ -96,5 +112,4 @@ class PageHoover
         // Return status
         return true;
     }
-
 }
