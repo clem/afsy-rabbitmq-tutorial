@@ -20,6 +20,7 @@ framework:
     trusted_proxies: ~
     session:
         # handler_id set to null will use default session handler from php.ini
+        name:        afsy_tutorial
         handler_id:  ~
     fragments:       ~
     http_method_override: true
