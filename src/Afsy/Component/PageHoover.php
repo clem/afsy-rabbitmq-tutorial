@@ -2,16 +2,16 @@
 
 namespace Afsy\Component;
 
-use Afsy\Component\Curl\Curl;
+use GuzzleHttp\Client as GuzzleClient;
 use Symfony\Component\DomCrawler\Crawler;
 use OldSound\RabbitMqBundle\RabbitMq\Producer;
 
 class PageHoover
 {
     /**
-     *  @var Afsy\Component\Curl\Curl
+     *  @var GuzzleHttp\Client
      */
-    protected $curl = null;
+    protected $client = null;
 
     /**
      *  @var array
@@ -31,16 +31,16 @@ class PageHoover
     /**
      *  Main constructor
      *
-     *  @param (Curl) $curl                         Curl class
+     *  @param (GuzzleClient) $client               Guzzle Client
      *  @param (Producer) $downloadImageProducer    Download image producer
      *  @param (array) $options                     Options list
      *
      *  @return (void)
      */
-    public function __construct(Curl $curl, Producer $downloadImageProducer, array $options)
+    public function __construct(GuzzleClient $client, Producer $downloadImageProducer, array $options)
     {
         // Initialize
-        $this->curl = $curl;
+        $this->client = $client;
         $this->options = $options;
         $this->downloadImageProducer = $downloadImageProducer;
 
@@ -63,21 +63,24 @@ class PageHoover
         $saveFile = $downloadFolder.date('Ymd-His').'-'.$pageParts['filename'].'.htm';
 
         // Download page
-        $pageContent = $this->curl->get($page);
+        $res = $this->client->get($page);
 
         // Check downloaded content
-        if(!$pageContent) {
+        if($res->getStatusCode() !== 200) {
             return false;
         }
 
+        // Get page content
+        $pageContent = $res->getBody()->getContents();
+
         // Save page in downloadFolder
-        if(!file_put_contents($saveFile, "\xEF\xBB\xBF".$pageContent->body)) {
+        if(!file_put_contents($saveFile, "\xEF\xBB\xBF".$pageContent)) {
             // Throw error
             throw new \Exception("Error saving file", 1);
         }
 
         // Initialize crawler
-        $crawler = new Crawler($pageContent->body);
+        $crawler = new Crawler($pageContent);
 
         // Get images list
         $images = $crawler->filter('img')->each(function(Crawler $image, $i) {

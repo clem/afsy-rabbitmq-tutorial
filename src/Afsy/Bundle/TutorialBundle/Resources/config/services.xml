@@ -6,11 +6,11 @@
 
     <services>
 
-        <service id="curl" class="Afsy\Component\Curl\Curl">
-        </service>
+        <service id="guzzle.client" class="GuzzleHttp\Client"></service>
 
         <service id="afsy.pagehoover" class="Afsy\Component\PageHoover">
-            <argument type="service" id="curl" />
+            <argument type="service" id="guzzle.client" />
+            <argument type="service" id="old_sound_rabbit_mq.afsy_download_image_producer" />
             <argument type="collection">
                 <argument key="downloadFolder">./downloaded_pages/</argument>
                 <argument type="service" id="old_sound_rabbit_mq.afsy_download_image_producer" />
@@ -18,7 +18,7 @@
         </service>
 
         <service id="afsy_download_image_service" class="Afsy\Component\AMQP\AfsyDownloadImageConsumer">
-            <argument type="service" id="curl" />
+            <argument type="service" id="guzzle.client" />
             <argument type="collection">
                 <argument key="createFolderMod">0755</argument>
             </argument>

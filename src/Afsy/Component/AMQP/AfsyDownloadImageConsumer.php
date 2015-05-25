@@ -2,16 +2,16 @@
 
 namespace Afsy\Component\AMQP;
 
-use Afsy\Component\Curl\Curl;
+use GuzzleHttp\Client as GuzzleClient;
 use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
 use PhpAmqpLib\Message\AMQPMessage;
 
 class AfsyDownloadImageConsumer implements ConsumerInterface
 {
     /**
-     * @var Curl $curl
+     * @var GuzzleHttp\Client $client
      */
-    protected $curl;
+    protected $client;
 
     // Folders
     protected $createFolderMod = 0755;
@@ -19,15 +19,15 @@ class AfsyDownloadImageConsumer implements ConsumerInterface
     /**
      *  Main constructor
      *
-     *  @param (Curl) $curl                 Curl
-     *  @param (array) $options             Array of options
+     *  @param (GuzzleHttp\Client) $client      Guzzle Client
+     *  @param (array) $options                 Array of options
      *
      *  @return (void)
      */
-    public function __construct(Curl $curl, $options = array())
+    public function __construct(GuzzleClient $client, $options = array())
     {
         // Initialize
-        $this->curl = $curl;
+        $this->client = $client;
 
         // Initialize options
         $this->createFolderMod = isset($options['createFolderMod']) ? $options['createFolderMod'] : $this->createFolderMod;
@@ -98,7 +98,7 @@ class AfsyDownloadImageConsumer implements ConsumerInterface
             echo 'Begin download of "'.$downloadImagePath.'".'."\n";
 
             // Get image content
-            $imageContent = $this->curl->get($downloadImagePath);
+            $imageContent = $this->client->get($downloadImagePath);
 
             // Check content
             if(!$imageContent || $imageContent->headers['Status-Code'] == '404') {
