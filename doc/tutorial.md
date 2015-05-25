@@ -26,9 +26,9 @@ Here is a more complexe system where, with a messaging service, a producer B can
 
 ## Install and requirements
 
-### RabbitMQ Install 
+### RabbitMQ Install
 
-So, here we go. Firstly, we need to install [RabbitMQ](http://www.rabbitmq.com/), and, I assure you before you will ask, it is available for [Linux](http://www.rabbitmq.com/install-debian.html), [Mac](http://www.rabbitmq.com/install-standalone-mac.html) and [Windows](http://www.rabbitmq.com/install-windows.html). 
+So, here we go. Firstly, we need to install [RabbitMQ](http://www.rabbitmq.com/), and, I assure you before you will ask, it is available for [Linux](http://www.rabbitmq.com/install-debian.html), [Mac](http://www.rabbitmq.com/install-standalone-mac.html) and [Windows](http://www.rabbitmq.com/install-windows.html).
 
 One installed, you only need to launch the server with this command:
 
@@ -54,7 +54,7 @@ Then, we will create `Component` and `Component/AMQP` folders in the `Afsy` fold
 
 ```
 $ cd /src/Afsy
-$ mkdir -p Component/AMQP 
+$ mkdir -p Component/AMQP
 ```
 It's in this folder that we will create the producer and consumer classes.
 
@@ -70,7 +70,7 @@ Once our bundle ready, we will add the RabbitMQBundle bundle to the `composer.js
 }
 ```
 
-And do a composer update : 
+And do a composer update :
 
 ```
 $ composer update oldsound/rabbitmq-bundle
@@ -89,7 +89,7 @@ public function registerBundles()
 
 ### RabbitMQBundle Configuration
 
-To configure this bundle, nothing difficult: we use the [bundle's default configuration](https://github.com/videlalvaro/rabbitmqbundle#usage) in the `app/config/config.yml`: 
+To configure this bundle, nothing difficult: we use the [bundle's default configuration](https://github.com/videlalvaro/rabbitmqbundle#usage) in the `app/config/config.yml`:
 
 ```yaml
 old_sound_rabbit_mq:
@@ -142,7 +142,7 @@ class PageHoover
 
     /**
      *  Main constructor
-     *  
+     *
      *  @param (Curl) $curl         Curl class
      *  @param (array) $options     Options list
      *
@@ -172,8 +172,8 @@ class PageHoover
         $saveFile = $this->downloadFolder.date('Ymd-His').'-'.$pageParts['filename'].'.htm';
 
         // Download page
-        $pageContent = $this->curl->get($page); 
-     
+        $pageContent = $this->curl->get($page);
+
         // Check downloaded content
         if(!$pageContent) { return false; }
 
@@ -190,7 +190,7 @@ class PageHoover
         // Get images list
         $images = $crawler->filter('img')->each(function($image, $i) { return $image->attr('src'); });
 
-        // @todo : Download images
+        // Download images (we'll do this later)
 
         // Return status
         return true;
@@ -210,7 +210,7 @@ Then, we instanciate it as a service in the services.xml (`src/Afsy/Bundle/Tutor
 ```
 
 We will take care, in the same time, to create the `/web/downloaded_pages/` folder to store the downloaded pages, and give it the right permissions (as a cache folder):
- 
+
 ```
 $ cd web/
 $ mkdir downloaded_pages
@@ -252,7 +252,7 @@ All this is nice, but for the moment, it's already known… I know, but it was r
 
 ### The first producer
 
-The producer only need a few information: a few config lines… and that's all. 
+The producer only need a few information: a few config lines… and that's all.
 So, let's update the old_sound_rabbit_mq configuration to declare it :
 
 ```yaml
@@ -272,14 +272,14 @@ Then, we could use it as another service. Let's update the **PageHoover** servic
 
 You will notice that the service name is really simple : **old_sound_rabbit_mq.[producer_name]_producer**.
 
-Finally, we update the `PageHoover.php` class: 
+Finally, we update the `PageHoover.php` class:
 
 ```php
 
 // We use the RabbitMqBundle producer
 use OldSound\RabbitMqBundle\RabbitMq\Producer;
 
-// We declare it as a protected variable 
+// We declare it as a protected variable
 protected $downloadImageProducer = null;
 
 // And we update the constructor
@@ -290,9 +290,9 @@ public function __construct(Curl $curl, Producer $downloadImageProducer, array $
     // […]
 }
 
-// And finally, we update the *downloadPage()* method, replacing the '// @todo : Download images' part : 
+// And finally, we update the *downloadPage()* method, replacing the '// Download images (we'll do this later)' part :
 // Download images
-foreach ($images as $image) 
+foreach ($images as $image)
 {
     // Initialize
     $image = str_replace(' ', '', $image);
@@ -407,10 +407,10 @@ class AfsyDownloadImageConsumer implements ConsumerInterface
 
     /**
      *  Download an image to a given path
-     * 
-     *  @param (string) $downloadImagePath          Download image path 
+     *
+     *  @param (string) $downloadImagePath          Download image path
      *  @param (string) $saveImagePath              Save image path
-     * 
+     *
      *  @return (boolean) Download status (or true if file already exists)
      */
     protected function downloadImageTo($downloadImagePath, $saveImagePath)
@@ -420,12 +420,12 @@ class AfsyDownloadImageConsumer implements ConsumerInterface
         $saveStatus = false;
 
         // Check if image already exists
-        if(file_exists($saveImagePath)) 
-        { 
+        if(file_exists($saveImagePath))
+        {
             echo 'File "'.$saveImagePath.'" already exists'."\n";
-            return true; 
+            return true;
         }
-        
+
         // Check if folder already exists
         if(!is_dir($saveImageFolder))
         {
@@ -438,29 +438,29 @@ class AfsyDownloadImageConsumer implements ConsumerInterface
         }
 
         // Download image
-        try 
+        try
         {
             // Log download status
             echo 'Begin download of "'.$downloadImagePath.'".'."\n";
 
-            // Get image content 
+            // Get image content
             $imageContent = $this->curl->get($downloadImagePath);
 
             // Check content
-            if(!$imageContent || $imageContent->headers['Status-Code'] == '404') 
+            if(!$imageContent || $imageContent->headers['Status-Code'] == '404')
             {
                 throw new \Exception('Error downloading file "'.$downloadImagePath.'" : returns a void content or a 404 page.', 1);
                 return false;
             }
 
-            // Save image 
+            // Save image
             $saveStatus = file_put_contents($saveImagePath, $imageContent);
-        
+
             // Log info
             echo 'Image "'.$saveImagePath.'" has been successfully downloaded!'."\n";
 
-        } 
-        catch (\Exception $e) 
+        }
+        catch (\Exception $e)
         {
             // Log error
             echo '#ERROR# Image "'.$downloadImagePath.'" was not downloaded! '."\n";
@@ -496,7 +496,7 @@ old_sound_rabbit_mq:
             callback:               afsy_download_image_service
 ```
 
-And voilà, we have our first consumer and we almost can use it… 
+And voilà, we have our first consumer and we almost can use it…
 
 ### One last thing : the queue
 
@@ -518,17 +518,17 @@ In parallel, RabbitMQ will create automatically an exchange box (visible in the 
 
 We only have to bind them:
 
-![image](./img/21-6-add-binding.png) 
+![image](./img/21-6-add-binding.png)
 
 ![image](./img/21-7-binded-queue.png)
 
 And voilà !
 
-### Let's go... 
+### Let's go...
 
 We can now go back to our app and refresh the page to show what's going on.
 Normally (if you are connected to the Internet), the page will successfully download and display the success message "Page "http://afsy.fr/" is downloaded !"
- 
+
 ## Processing messages
 
 Once downloaded, we can see that new messages are in the `afsy_download_image` queue:
