@@ -103,7 +103,6 @@ class AfsyDownloadImageConsumer implements ConsumerInterface
             // Check content
             if(!$imageContent || $imageContent->headers['Status-Code'] == '404') {
                 throw new \Exception('Error downloading file "'.$downloadImagePath.'" : returns a void content or a 404 page.', 1);
-                return false;
             }
 
             // Save image
