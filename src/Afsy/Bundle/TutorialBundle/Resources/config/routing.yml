@@ -1,7 +1,4 @@
-afsy_tutorial_homepage:
-    pattern:  /hello/{name}
-    defaults: { _controller: AfsyTutorialBundle:Default:index }
-
 afsy_tutorial_download:
-    pattern:    "/afsy/download"
-    defaults:   { _controller: "AfsyTutorialBundle:Default:download" }
+    pattern:        "/afsy/download"
+    defaults:       { _controller: "AfsyTutorialBundle:Default:download" }
+    requirements:   { _method: GET }
