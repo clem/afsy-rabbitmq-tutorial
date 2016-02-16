@@ -4,7 +4,10 @@
     "type": "project",
     "description": "The \"Symfony Standard Edition\" distribution",
     "autoload": {
-        "psr-0": { "": "src/" }
+        "psr-0": {
+            "Afsy\\Bundle\\": "src/Afsy/Bundle/",
+            "Afsy\\Component\\": "src/Afsy/Component/"
+        }
     },
     "require": {
         "php": ">=5.3.3",
