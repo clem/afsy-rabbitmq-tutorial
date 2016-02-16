@@ -24,6 +24,13 @@
             </argument>
         </service>
 
+        <!--
+            Nullify this service. It is deprecated and raises an error on SensioLabs Insight
+
+            @see https://github.com/symfony/symfony/issues/16872#issuecomment-171798705
+        -->
+        <service id="twig.extension.actions" class="Afsy\Bundle\Twig\NullExtension"></service>
+
     </services>
 
 </container>
