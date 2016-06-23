@@ -1,13 +1,10 @@
 {
-    "name": "symfony/framework-standard-edition",
+    "name": "clem/afsy-rabbitmq-tutorial",
     "license": "MIT",
     "type": "project",
-    "description": "The \"Symfony Standard Edition\" distribution",
+    "description": "AFSY Advent calendar 2013 - RabbitMQ tutorial sources",
     "autoload": {
-        "psr-0": {
-            "Afsy\\Bundle\\": "src/Afsy/Bundle/",
-            "Afsy\\Component\\": "src/Afsy/Component/"
-        }
+        "psr-0": { "": "src/", "SymfonyStandard": "app/" }
     },
     "require": {
         "php": ">=5.3.3",
