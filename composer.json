@@ -5,7 +5,8 @@
     "description": "AFSY Advent calendar 2013 - RabbitMQ tutorial sources",
     "autoload": {
         "psr-4": {
-            "": "src/"
+            "Afsy\\Bundle\\": "src/Afsy/Bundle/",
+            "Afsy\\Component\\": "src/Afsy/Component/"
         },
         "classmap": ["app/AppKernel.php", "app/AppCache.php"]
     },
