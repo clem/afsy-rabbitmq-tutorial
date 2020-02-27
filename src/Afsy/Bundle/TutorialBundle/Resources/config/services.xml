@@ -12,7 +12,7 @@
             <argument type="service" id="guzzle.client" />
             <argument type="service" id="old_sound_rabbit_mq.afsy_download_image_producer" />
             <argument type="collection">
-                <argument key="downloadFolder">./downloaded_pages/</argument>
+                <argument key="downloadFolder">%kernel.root_dir%/../web/downloaded_pages/</argument>
                 <argument type="service" id="old_sound_rabbit_mq.afsy_download_image_producer" />
             </argument>
         </service>
