@@ -16,7 +16,7 @@ class PageHoover
     /**
      *  @var array
      */
-    protected $options = array();
+    protected $options = [];
 
     /**
      *  @var string
@@ -29,7 +29,7 @@ class PageHoover
     protected $downloadImageProducer = null;
 
     /**
-     *  Main constructor
+     *  Main constructor.
      *
      *  @param (GuzzleClient) $client               Guzzle Client
      *  @param (Producer) $downloadImageProducer    Download image producer
@@ -49,7 +49,7 @@ class PageHoover
     }
 
     /**
-     *  Download page method
+     *  Download page method.
      *
      *  @param (string) $page       Page to download (url)
      *
@@ -66,7 +66,7 @@ class PageHoover
         $res = $this->client->get($page);
 
         // Check downloaded content
-        if($res->getStatusCode() !== 200) {
+        if ($res->getStatusCode() !== 200) {
             return false;
         }
 
@@ -74,16 +74,16 @@ class PageHoover
         $pageContent = $res->getBody()->getContents();
 
         // Save page in downloadFolder
-        if(!file_put_contents($saveFile, "\xEF\xBB\xBF".$pageContent)) {
+        if (!file_put_contents($saveFile, "\xEF\xBB\xBF".$pageContent)) {
             // Throw error
-            throw new \Exception("Error saving file", 1);
+            throw new \Exception('Error saving file', 1);
         }
 
         // Initialize crawler
         $crawler = new Crawler($pageContent);
 
         // Get images list
-        $images = $crawler->filter('img')->each(function(Crawler $image, $i) {
+        $images = $crawler->filter('img')->each(function (Crawler $image, $i) {
             return $image->attr('src');
         });
 
@@ -95,17 +95,21 @@ class PageHoover
             $hasHost = filter_var($image, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED);
 
             // Check host
-            if(!$hasHost) { $image = $pageParts['dirname'].$image; }
+            if (!$hasHost) {
+                $image = $pageParts['dirname'].$image;
+            }
 
             // Check extension
-            if(!in_array($imgExt, array('png', 'jpg', 'jpeg', 'gif'))){ $imgExt = 'png'; }
+            if (!in_array($imgExt, ['png', 'jpg', 'jpeg', 'gif'])) {
+                $imgExt = 'png';
+            }
 
             // Create image to publish
-            $imgToPublish = array(
+            $imgToPublish = [
                 'url' => $image,
                 'savePath' => $this->downloadFolder.pathinfo($image, PATHINFO_FILENAME).'.'.$imgExt,
                 'savedHtmlFile' => $saveFile,
-            );
+            ];
 
             // Publish image
             $sImg = serialize($imgToPublish);
