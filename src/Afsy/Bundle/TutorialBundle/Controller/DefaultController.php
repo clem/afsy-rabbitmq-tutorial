@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 class DefaultController extends Controller
 {
     /**
-     *  Download action
+     *  Download action.
      */
     public function downloadAction()
     {

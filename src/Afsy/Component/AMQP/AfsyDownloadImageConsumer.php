@@ -9,7 +9,7 @@ use PhpAmqpLib\Message\AMQPMessage;
 class AfsyDownloadImageConsumer implements ConsumerInterface
 {
     /**
-     * @var GuzzleHttp\Client $client
+     * @var GuzzleHttp\Client
      */
     protected $client;
 
@@ -17,14 +17,14 @@ class AfsyDownloadImageConsumer implements ConsumerInterface
     protected $createFolderMod = 0755;
 
     /**
-     *  Main constructor
+     *  Main constructor.
      *
      *  @param (GuzzleHttp\Client) $client      Guzzle Client
      *  @param (array) $options                 Array of options
      *
      *  @return (void)
      */
-    public function __construct(GuzzleClient $client, $options = array())
+    public function __construct(GuzzleClient $client, $options = [])
     {
         // Initialize
         $this->client = $client;
@@ -35,9 +35,9 @@ class AfsyDownloadImageConsumer implements ConsumerInterface
 
     /**
      *  Main execute method
-     *  Execute actions for a given message
+     *  Execute actions for a given message.
      *
-     *  @param (AMQPMessage) $msg       An instance of `PhpAmqpLib\Message\AMQPMessage` with the $msg->body being the data sent over RabbitMQ.
+     *  @param (AMQPMessage) $msg       An instance of `PhpAmqpLib\Message\AMQPMessage` with the $msg->body being the data sent over RabbitMQ
      *
      *  @return (boolean) Execution status (true if everything's of, false if message should be re-queued)
      */
@@ -47,7 +47,7 @@ class AfsyDownloadImageConsumer implements ConsumerInterface
         $imageToDownload = unserialize($msg->body);
 
         // Download image
-        if(!$this->downloadImageTo($imageToDownload['url'], $imageToDownload['savePath'])) {
+        if (!$this->downloadImageTo($imageToDownload['url'], $imageToDownload['savePath'])) {
             // Image should be downloaded again
             return false;
         }
@@ -63,7 +63,7 @@ class AfsyDownloadImageConsumer implements ConsumerInterface
     }
 
     /**
-     *  Download an image to a given path
+     *  Download an image to a given path.
      *
      *  @param (string) $downloadImagePath          Download image path
      *  @param (string) $saveImagePath              Save image path
@@ -77,15 +77,16 @@ class AfsyDownloadImageConsumer implements ConsumerInterface
         $saveStatus = false;
 
         // Check if image already exists
-        if(file_exists($saveImagePath)) {
+        if (file_exists($saveImagePath)) {
             echo 'File "'.$saveImagePath.'" already exists'."\n";
+
             return true;
         }
 
         // Check if folder already exists
-        if(!is_dir($saveImageFolder)) {
+        if (!is_dir($saveImageFolder)) {
             // Initialize
-            $createFolderMod = is_int($this->createFolderMod) ? $this->createFolderMod : intval($this->createFolderMod);
+            $createFolderMod = is_int($this->createFolderMod) ? $this->createFolderMod : (int) ($this->createFolderMod);
 
             // Create folder
             mkdir($saveImageFolder, $createFolderMod, true);
@@ -101,7 +102,7 @@ class AfsyDownloadImageConsumer implements ConsumerInterface
             $imageContent = $this->client->get($downloadImagePath);
 
             // Check content
-            if(!$imageContent || $imageContent->headers['Status-Code'] == '404') {
+            if (!$imageContent || $imageContent->headers['Status-Code'] == '404') {
                 throw new \Exception('Error downloading file "'.$downloadImagePath.'" : returns a void content or a 404 page.', 1);
             }
 
@@ -110,9 +111,7 @@ class AfsyDownloadImageConsumer implements ConsumerInterface
 
             // Log info
             echo 'Image "'.$saveImagePath.'" has been successfully downloaded!'."\n";
-
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             // Log error
             echo '#ERROR# Image "'.$downloadImagePath.'" was not downloaded! '."\n";
         }
@@ -120,5 +119,4 @@ class AfsyDownloadImageConsumer implements ConsumerInterface
         // Return save status
         return $saveStatus;
     }
-
 }
