@@ -10,3 +10,5 @@
 /bin/
 /composer.phar
 /web/downloaded_pages/
+
+.php_cs.cache
