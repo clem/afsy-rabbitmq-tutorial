@@ -9,7 +9,7 @@ use OldSound\RabbitMqBundle\RabbitMq\Producer;
 class PageHoover
 {
     /**
-     *  @var GuzzleHttp\Client
+     *  @var GuzzleClient
      */
     protected $client = null;
 
@@ -24,7 +24,7 @@ class PageHoover
     protected $downloadFolder = null;
 
     /**
-     *  @var OldSound\RabbitMqBundle\RabbitMq\Producer
+     *  @var Producer
      */
     protected $downloadImageProducer = null;
 
@@ -83,7 +83,7 @@ class PageHoover
         $crawler = new Crawler($pageContent);
 
         // Get images list
-        $images = $crawler->filter('img')->each(function(Crawler $image, $i) {
+        $images = $crawler->filter('img')->each(function(Crawler $image) {
             return $image->attr('src');
         });
 

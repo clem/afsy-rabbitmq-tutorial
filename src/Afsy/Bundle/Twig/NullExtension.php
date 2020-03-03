@@ -2,12 +2,14 @@
 
 namespace Afsy\Bundle\Twig;
 
-class NullExtension implements \Twig_ExtensionInterface
+use \Twig\Extension\ExtensionInterface;
+
+class NullExtension implements ExtensionInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function initRuntime(\Twig_Environment $environment)
+    public function initRuntime(/** @scrutinizer ignore-unused */ \Twig_Environment $environment)
     {
     }
 

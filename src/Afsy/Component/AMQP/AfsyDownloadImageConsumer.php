@@ -9,7 +9,7 @@ use PhpAmqpLib\Message\AMQPMessage;
 class AfsyDownloadImageConsumer implements ConsumerInterface
 {
     /**
-     * @var GuzzleHttp\Client
+     * @var GuzzleClient
      */
     protected $client;
 
@@ -59,7 +59,7 @@ class AfsyDownloadImageConsumer implements ConsumerInterface
         $savedHtmlFileContent = str_replace($imageToDownload['url'], $imageToDownload['savePath'], $savedHtmlFileContent);
 
         // Save file
-        return file_put_contents($imageToDownload['savedHtmlFile'], $savedHtmlFileContent);
+        return file_put_contents($imageToDownload['savedHtmlFile'], $savedHtmlFileContent) > 0;
     }
 
     /**
@@ -107,7 +107,7 @@ class AfsyDownloadImageConsumer implements ConsumerInterface
             }
 
             // Save image
-            $saveStatus = file_put_contents($saveImagePath, $imageContent);
+            $saveStatus = file_put_contents($saveImagePath, $imageContent) > 0;
 
             // Log info
             echo 'Image "'.$saveImagePath.'" has been successfully downloaded!'."\n";
