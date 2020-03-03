@@ -1,6 +1,9 @@
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/clem/afsy-rabbitmq-tutorial/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/clem/afsy-rabbitmq-tutorial/?branch=master)
+
 # AFSY Tutorial
 
-This project contains sources of the tutorial I wrote for the AFSY advent calendar 2013.
+This project contains sources of [the tutorial](http://afsy.fr/avent/2013/21-rabbitmq-et-Symfony2-traitements-asynchrones) 
+I wrote for the [AFSY advent calendar 2013](http://afsy.fr/avent/2013).
 
 ## Tutorial 
 
