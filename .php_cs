@@ -14,6 +14,9 @@ return PhpCsFixer\Config::create()
         // 'fopen_flags' => false,
         'protected_to_private' => false,
         // 'combine_nested_dirname' => true,
+        'function_declaration' => [
+            'closure_function_spacing' => 'none',
+        ]
     ])
     ->setRiskyAllowed(true)
     ->setFinder(
