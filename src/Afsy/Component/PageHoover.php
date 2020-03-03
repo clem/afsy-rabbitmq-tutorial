@@ -83,7 +83,7 @@ class PageHoover
         $crawler = new Crawler($pageContent);
 
         // Get images list
-        $images = $crawler->filter('img')->each(function (Crawler $image, $i) {
+        $images = $crawler->filter('img')->each(function(Crawler $image, $i) {
             return $image->attr('src');
         });
 
