@@ -3,13 +3,14 @@
 namespace Afsy\Component\AMQP;
 
 use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Message\ResponseInterface;
 use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
 use PhpAmqpLib\Message\AMQPMessage;
 
 class AfsyDownloadImageConsumer implements ConsumerInterface
 {
     /**
-     * @var GuzzleHttp\Client
+     * @var GuzzleClient
      */
     protected $client;
 
@@ -19,7 +20,7 @@ class AfsyDownloadImageConsumer implements ConsumerInterface
     /**
      *  Main constructor.
      *
-     *  @param (GuzzleHttp\Client) $client      Guzzle Client
+     *  @param (GuzzleClient) $client      Guzzle Client
      *  @param (array) $options                 Array of options
      *
      *  @return (void)
@@ -59,7 +60,7 @@ class AfsyDownloadImageConsumer implements ConsumerInterface
         $savedHtmlFileContent = str_replace($imageToDownload['url'], $imageToDownload['savePath'], $savedHtmlFileContent);
 
         // Save file
-        return file_put_contents($imageToDownload['savedHtmlFile'], $savedHtmlFileContent);
+        return file_put_contents($imageToDownload['savedHtmlFile'], $savedHtmlFileContent) > 0;
     }
 
     /**
@@ -99,15 +100,16 @@ class AfsyDownloadImageConsumer implements ConsumerInterface
             echo 'Begin download of "'.$downloadImagePath.'".'."\n";
 
             // Get image content
+            /* @var ResponseInterface $imageContent */
             $imageContent = $this->client->get($downloadImagePath);
 
             // Check content
-            if (!$imageContent || $imageContent->headers['Status-Code'] == '404') {
-                throw new \Exception('Error downloading file "'.$downloadImagePath.'" : returns a void content or a 404 page.', 1);
+            if (404 === $imageContent->getStatusCode()) {
+                throw new \Exception('Error downloading file "'.$downloadImagePath.'" : returns a 404 page.', 1);
             }
 
             // Save image
-            $saveStatus = file_put_contents($saveImagePath, $imageContent);
+            $saveStatus = file_put_contents($saveImagePath, $imageContent) > 0;
 
             // Log info
             echo 'Image "'.$saveImagePath.'" has been successfully downloaded!'."\n";
